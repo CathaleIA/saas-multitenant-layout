@@ -62,8 +62,10 @@ if [[ $server -eq 1 ]]; then
     exit 1
   fi
 
-  sam build -t template.yaml --use-container
-  sam deploy --config-file samconfig.toml --region="$REGION" --stack-name="$stackname"
+  #sam build -t template.yaml --use-container
+  sam build -t template.yaml
+  #sam deploy --config-file samconfig.toml --region="$REGION" --stack-name="$stackname"
+  sam deploy --config-file samconfig.toml --region="$REGION" --stack-name="$stackname" --disable-rollback
   cd ../scripts || exit # stop execution if cd fails
 fi
 
@@ -74,14 +76,16 @@ if [[ $client -eq 1 ]]; then
   APP_APIGATEWAYURL=$(aws cloudformation describe-stacks --stack-name "$stackname" --query "Stacks[0].Outputs[?OutputKey=='APIGatewayURL'].OutputValue" --output text)
 
   # Configuring application UI
-
   echo "aws s3 ls s3://${APP_SITE_BUCKET}"
   if ! aws s3 ls "s3://${APP_SITE_BUCKET}"; then
     echo "Error! S3 Bucket: $APP_SITE_BUCKET not readable"
     exit 1
   fi
 
-  cd ../client/Application || exit # stop execution if cd fails
+  # Get the directory where the script is located
+  SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+  # Go to the client directory
+  cd "$SCRIPT_DIR/../client/Application" || exit # stop execution if cd fails
 
   echo "Configuring environment for App Client"
 

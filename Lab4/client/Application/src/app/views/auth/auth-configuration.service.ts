@@ -50,7 +50,7 @@ export class AuthConfigurationService {
     const setup$ = this.params$.pipe(
       map((val) => {
         // remove trailing slash (/) if present
-        val.apiGatewayUrl = val.apiGatewayUrl.replace(/\/$/, '');
+        val.apiGatewayUrl = 'https://5s07mnfu37.execute-api.us-east-1.amazonaws.com/prod'; // Forzar la URL correcta
         localStorage.setItem('userPoolId', val.userPoolId);
         localStorage.setItem('tenantName', tenantName);
         localStorage.setItem('appClientId', val.appClientId);

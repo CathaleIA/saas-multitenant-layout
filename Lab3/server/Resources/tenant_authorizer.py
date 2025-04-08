@@ -56,13 +56,17 @@ def lambda_handler(event, context):
     policy.region = tmp[3]
     policy.stage = api_gateway_arn_tmp[1]
 
-
     #roles are not fine-grained enough to allow selectively
     policy.allowAllMethods()        
     
     authResponse = policy.build()
  
-    # TODO: Add tenant context to authResponse
+    context = {
+    'userName': user_name,
+    'tenantId': tenant_id        
+    }
+
+    authResponse['context'] = context
     
     return authResponse
 

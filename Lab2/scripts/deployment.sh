@@ -81,7 +81,7 @@ if [[ $server -eq 1 ]]; then
     exit 1
   fi
 
-  sam build -t template.yaml --use-container
+  sam build -t template.yaml
 
   if [ "$IS_RUNNING_IN_EVENT_ENGINE" = true ]; then
     sam deploy --config-file samconfig.toml --region="$REGION" --parameter-overrides EventEngineParameter=$IS_RUNNING_IN_EVENT_ENGINE AdminUserPoolCallbackURLParameter=$ADMIN_SITE_URL
@@ -217,3 +217,7 @@ EoF
 fi
 echo "Admin site URL: https://$ADMIN_SITE_URL"
 echo "Landing site URL: https://$LANDING_APP_SITE_URL"
+
+sudo yum update -y
+sudo yum groupinstall -y "Development Tools"
+sudo yum install -y gcc openssl-devel bzip2-devel libffi-devel zlib-devel

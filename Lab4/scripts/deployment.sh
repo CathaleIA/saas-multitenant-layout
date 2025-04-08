@@ -52,7 +52,7 @@ if [[ $server -eq 1 ]] || [[ $bootstrap -eq 1 ]]; then
   echo "Bootstrap server code is getting deployed"
   cd ../server
   REGION=$(aws configure get region)
-  sam build -t shared-template.yaml --use-container
+  sam build -t shared-template.yaml
   
   if [ "$IS_RUNNING_IN_EVENT_ENGINE" = true ]; then
     sam deploy --config-file shared-samconfig.toml --region=$REGION --parameter-overrides EventEngineParameter=$IS_RUNNING_IN_EVENT_ENGINE AdminUserPoolCallbackURLParameter=$ADMIN_SITE_URL TenantUserPoolCallbackURLParameter=$APP_SITE_URL
@@ -67,7 +67,7 @@ if [[ $server -eq 1 ]] || [[ $tenant -eq 1 ]]; then
   echo "Tenant server code is getting deployed"
   cd ../server
   REGION=$(aws configure get region)
-  sam build -t tenant-template.yaml --use-container
+  sam build -t tenant-template.yaml
   sam deploy --config-file tenant-samconfig.toml --region=$REGION
   cd ../scripts
 fi
@@ -83,11 +83,8 @@ if [[ $client -eq 1 ]]; then
     APP_SITE_URL=$(aws cloudformation describe-stacks --stack-name serverless-saas --query "Stacks[0].Outputs[?OutputKey=='ApplicationSite'].OutputValue" --output text)
   fi
   
-
-
   echo "Admin site URL: https://$ADMIN_SITE_URL"
   echo "Landing site URL: https://$LANDING_APP_SITE_URL"
   echo "App site URL: https://$APP_SITE_URL"
-  
 fi  
 

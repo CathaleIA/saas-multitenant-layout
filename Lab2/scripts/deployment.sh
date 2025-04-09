@@ -190,20 +190,23 @@ EoF
 
   echo "Configuring environment for Landing Client"
 
-  cat <<EoF >./src/environments/environment.prod.ts
+  cat <<EoF > .env.production
 export const environment = {
   production: true,
   apiGatewayUrl: '$ADMIN_APIGATEWAYURL'
 };
 EoF
-  cat <<EoF >./src/environments/environment.ts
+  cat <<EoF > .env.local
 export const environment = {
   production: false,
   apiGatewayUrl: '$ADMIN_APIGATEWAYURL'
 };
 EoF
 
-  npm install && npm run build
+  # Build de Next.js
+  npm install
+  npm run build
+  npm run export
 
   echo "aws s3 sync --delete --cache-control no-store dist s3://${LANDING_APP_SITE_BUCKET}"
   aws s3 sync --delete --cache-control no-store dist "s3://${LANDING_APP_SITE_BUCKET}"
